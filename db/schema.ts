@@ -43,7 +43,7 @@ export const albums = pgTable(
   {
     id: uuid("id").defaultRandom().primaryKey(),
     title: text("title").notNull(),
-    releaseDate: date("release_date"),
+    releaseAt: date("release_at"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),

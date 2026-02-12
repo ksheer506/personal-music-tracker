@@ -15,3 +15,7 @@ export const trackArtistRoleEnum = pgEnum("track_artist_role", [
   "main",
   "feature",
 ]);
+
+export type AlbumArtistRole = (typeof albumArtistRoleEnum.enumValues)[number];
+
+export type TrackArtistRole = (typeof trackArtistRoleEnum.enumValues)[number];

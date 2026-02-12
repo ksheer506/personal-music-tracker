@@ -15,6 +15,13 @@
       "when": 1770797657930,
       "tag": "0001_pink_pandemic",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1770873027264,
+      "tag": "0002_chief_quasimodo",
+      "breakpoints": true
     }
   ]
 }
