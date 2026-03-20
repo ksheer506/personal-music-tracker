@@ -1,3 +1,4 @@
+import { TRACK_ARTIST_ROLE } from "@db/enums";
 import { ArtistWithRole } from "@service/Spotify/types";
 
 const parseMultiples = (v: string) => v.split(",").map((v) => v.trim()).filter(Boolean);
@@ -15,12 +16,12 @@ export const parseArtists = (track: string, artist: string) => {
     /* 1-1. artist: "A, B, C" */
     multiples.forEach((name) => {
       parsedArtists.add(name)
-      result.push({ name, role: "multiple" })
+      result.push({ name, role: TRACK_ARTIST_ROLE.multiple })
     })
   } else {
     /* 1-2. artist: "A" */
     parsedArtists.add(artist)
-    result.push({ name: artist, role: "main" })
+    result.push({ name: artist, role: TRACK_ARTIST_ROLE.main });
   }
   const [, features] = track.match(/\(feat\.(.+?)\)/i) ?? []
   const [, withArtists] = track.match(/\(with\.(.+?)\)/i) ?? []
@@ -32,14 +33,14 @@ export const parseArtists = (track: string, artist: string) => {
   if (features) {
     parseMultiples(features).forEach((name) => {
       parsedArtists.add(name)
-      result.push({ name, role: "feature" })
+      result.push({ name, role: TRACK_ARTIST_ROLE.feature })
     })
   }
   /* 3. track: "SomeSong(with. C)" */
   if (withArtists) {
     parseMultiples(withArtists).forEach((name) => {
       parsedArtists.add(name)
-      result.push({ name, role: "with" })
+      result.push({ name, role: TRACK_ARTIST_ROLE.with })
     })
   }
 
