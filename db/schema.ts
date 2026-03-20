@@ -9,6 +9,7 @@ import {
   unique,
   primaryKey,
   bigserial,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { albumArtistRoleEnum, trackArtistRoleEnum } from "./enums";
 
@@ -26,6 +27,7 @@ export const artists = pgTable(
   "artists",
   {
     id: uuid("id").defaultRandom().primaryKey(),
+    externalId: text("external_id"),
     name: text("name").notNull(),
     /** 아티스트 이름 정렬을 위한 필드. "the", "a" 등 제거, 대소문자 통일, 악센트 제거 */
     sortName: text("sort_name").notNull(),
@@ -35,6 +37,7 @@ export const artists = pgTable(
   },
   (t) => [
     unique("artist_sort_name_unique").on(t.sortName),
+    uniqueIndex("artists_external_id_unique").on(t.externalId),
   ],
 );
 

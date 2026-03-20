@@ -22,6 +22,13 @@
       "when": 1770873027264,
       "tag": "0002_chief_quasimodo",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1770876732094,
+      "tag": "0003_dapper_proudstar",
+      "breakpoints": true
     }
   ]
 }
