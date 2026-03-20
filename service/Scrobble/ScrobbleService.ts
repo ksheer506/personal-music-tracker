@@ -16,7 +16,7 @@ class ScrobbleService {
     const externalIds = await new SpotifyService().matchArtist(track, parsedArtists);
 
     return db.transaction(async (tx) => {
-      const artists = await new ArtistService().resolveMany(
+      const artists = await new ArtistService(tx).resolveMany(
         parsedArtists.map((artist, i) => ({ ...artist, externalId: externalIds[i] }))
       );
       const artistsWithRole = artists.map((a, i) => ({ ...a, role: parsedArtists[i].role }))

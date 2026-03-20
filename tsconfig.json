@@ -18,6 +18,7 @@
       "@hooks/*": ["./hooks/*"],
       "@lib/*": ["./lib/*"],
       "@service/*": ["./service/*"],
+      "@repository/*": ["./repository/*"],
       "@/*": ["./*"],
     }
   },
