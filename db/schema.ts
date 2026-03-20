@@ -56,10 +56,10 @@ export const albums = pgTable(
 export const albumArtists = pgTable(
   "album_artists",
   {
-    albumId: text("album_id")
+    albumId: uuid("album_id")
       .notNull()
       .references(() => albums.id, { onDelete: "cascade" }),
-    artistId: text("artist_id")
+    artistId: uuid("artist_id")
       .notNull()
       .references(() => artists.id, { onDelete: "cascade" }),
     role: albumArtistRoleEnum("role").notNull().default("main"),

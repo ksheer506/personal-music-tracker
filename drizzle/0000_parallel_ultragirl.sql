@@ -1,6 +1,10 @@
+CREATE TYPE "public"."album_artist_role" AS ENUM ('main', 'contributor', 'various');
+--> statement-breakpoint
+CREATE TYPE "public"."track_artist_role" AS ENUM ('main', 'multiple', 'feature', 'with');
+--> statement-breakpoint
 CREATE TABLE "album_artists" (
-	"album_id" text NOT NULL,
-	"artist_id" text NOT NULL,
+	"album_id" uuid NOT NULL,
+	"artist_id" uuid NOT NULL,
 	"role" "album_artist_role" DEFAULT 'main' NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "album_artists_album_id_artist_id_pk" PRIMARY KEY("album_id","artist_id")
