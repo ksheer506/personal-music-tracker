@@ -1,3 +1,5 @@
+import HoverCard from "@components/Card/HoverCard";
+
 type HeatmapProps = {
   title: string;
   values: number[];
@@ -10,7 +12,7 @@ function getHeatColor(value: number) {
 
 export default function Heatmap({ title, values }: HeatmapProps) {
   return (
-    <article className="rounded-xl border border-slate-200 bg-white p-4 transition-all duration-150 ease-out hover:scale-[1.01] hover:border-indigo-500 dark:border-slate-700 dark:bg-slate-900">
+    <HoverCard>
       <h3 className="mb-3 text-base font-medium">{title}</h3>
       <div className="grid grid-cols-7 gap-2">
         {values.map((value, idx) => (
@@ -22,6 +24,6 @@ export default function Heatmap({ title, values }: HeatmapProps) {
           />
         ))}
       </div>
-    </article>
+    </HoverCard>
   );
 }

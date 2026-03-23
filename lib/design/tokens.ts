@@ -11,7 +11,8 @@ export type PeriodOption = typeof PERIOD_OPTIONS[number]["value"];
 export const MOTION_TOKENS = {
   hoverMs: 190,
   filterMs: 200,
-  slideMs: 240,
+  slideMs: 330,
+  drawerOverlayOpacity: 0.35,
   easeStandard: "cubic-bezier(0.2, 0, 0, 1)",
   kpiCountDurationMs: 1000,
 };
