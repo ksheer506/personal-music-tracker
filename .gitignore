@@ -6,3 +6,4 @@ node_modules
 migration_lock.toml
 
 .vscode
+.next
