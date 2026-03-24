@@ -13,9 +13,8 @@ import {
   YAxis,
 } from "recharts";
 import type { DrillLevel, ListenHistoryPoint } from "@/lib/mock/lastfm";
-import HoverCard from "@components/Card/Card";
+import Card from "@components/Card/Card";
 import { CustomTooltip } from "@components/Chart/CustomTooltip";
-import CollapseSection from "@components/CollapseSection";
 import { MOTION_TOKENS } from "@lib/design/tokens";
 import { useMediaQuery } from "@hooks/useMediaQuery";
 
@@ -80,7 +79,7 @@ export default function DrillDownBarChart({ trackId, getData }: Props) {
   const hasDrill = current.level !== "day";
 
   return (
-    <HoverCard>
+    <Card>
       <div className="mb-3 flex items-center gap-1 text-sm">
         {breadcrumbs.map((crumb, i) => {
           const isLast = i === breadcrumbs.length - 1;
@@ -151,6 +150,6 @@ export default function DrillDownBarChart({ trackId, getData }: Props) {
           </BarChart>
         </ResponsiveContainer>
       </div>
-    </HoverCard>
+    </Card>
   );
 }

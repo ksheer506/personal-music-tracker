@@ -153,12 +153,12 @@ function StatGroup({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-md border border-slate-200 bg-white pb-1">
-      <p className="px-4 pt-3 pb-2 text-md font-semibold tracking-wide text-gray-900">
+    <Card.NoPadding className="p-4 pb-1">
+      <p className="pb-2 text-md font-semibold tracking-wide text-gray-900">
         {title}
       </p>
       <div className="divide-y divide-slate-100">{children}</div>
-    </div>
+    </Card.NoPadding>
   );
 }
 
@@ -172,9 +172,9 @@ function StatItem({
   value: string;
 }) {
   return (
-    <div className="flex items-center gap-3 px-4 py-2.5">
+    <div className="flex items-center gap-3 py-2.5">
       {icon}
-      <span className="text-sm text-gray-600">{label}</span>
+      <span className="text-sm text-gray-600 flex-[1_0_auto]">{label}</span>
       <span className="ml-auto text-sm font-semibold text-gray-900">{value}</span>
     </div>
   );

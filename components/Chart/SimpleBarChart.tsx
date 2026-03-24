@@ -1,6 +1,6 @@
 "use client";
 
-import HoverCard from "@components/Card/Card";
+import Card from "@components/Card/Card";
 import { CustomTooltip } from "@components/Chart/CustomTooltip";
 import { useMediaQuery } from "@hooks/useMediaQuery";
 import {
@@ -47,7 +47,7 @@ export default function SimpleBarChart({
   const hideXAxisLabel = useMediaQuery(`(max-width: ${X_AXIS_HIDE_MAX_WIDTH}px)`);
 
   return (
-    <HoverCard>
+    <Card>
       <h3 className="mb-3 text-base font-medium">{title}</h3>
       <div className="h-[220px] w-full min-w-0">
         <ResponsiveContainer
@@ -112,6 +112,6 @@ export default function SimpleBarChart({
           </BarChart>
         </ResponsiveContainer>
       </div>
-    </HoverCard>
+    </Card>
   );
 }

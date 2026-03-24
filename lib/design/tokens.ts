@@ -13,7 +13,9 @@ export const MOTION_TOKENS = {
   filterMs: 200,
   slideMs: 330,
   chartAnimationMs: 400,
-  drawerOverlayOpacity: 0.35,
-  easeStandard: "cubic-bezier(0.2, 0, 0, 1)",
   kpiCountDurationMs: 1000,
+
+  drawerOverlayOpacity: 0.35,
+
+  easeStandard: "cubic-bezier(0.2, 0, 0, 1)",
 };

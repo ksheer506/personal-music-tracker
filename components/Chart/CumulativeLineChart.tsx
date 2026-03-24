@@ -10,7 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import HoverCard from "@components/Card/Card";
+import Card from "@components/Card/Card";
 import { CustomTooltip } from "@components/Chart/CustomTooltip";
 import { MOTION_TOKENS } from "@lib/design/tokens";
 import type { CumulativePoint } from "@/lib/mock/lastfm";
@@ -43,7 +43,7 @@ export default function CumulativeLineChart({
   const data = useMemo(() => getData(start, end), [getData, start, end]);
 
   return (
-    <HoverCard>
+    <Card>
       <div className="mb-4 flex flex-wrap items-center gap-3 text-sm">
         <label className="flex items-center gap-1.5 text-gray-600">
           <span>시작</span>
@@ -117,6 +117,6 @@ export default function CumulativeLineChart({
           </LineChart>
         </ResponsiveContainer>
       </div>
-    </HoverCard>
+    </Card>
   );
 }

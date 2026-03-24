@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 
 import type { ComparePreset } from "@/lib/mock/lastfm";
 import { getCompareData } from "@/lib/mock/lastfm";
-import HoverCard from "@components/Card/HoverCard";
+import Card from "@components/Card/Card";
 
 const presetLabel: Record<ComparePreset, string> = {
   month: "이번 달 vs 지난 달",
@@ -41,17 +41,17 @@ export default function ComparePage() {
       </section>
 
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <HoverCard>
+        <Card.Hover>
           <h2 className="mb-3 text-base font-medium">{result.leftLabel}</h2>
           <p className="mt-2 text-[clamp(1.5rem,3vw,2.1rem)] font-bold tracking-tight">{result.leftValue.toLocaleString("ko-KR")}회</p>
-        </HoverCard>
-        <HoverCard>
+        </Card.Hover>
+        <Card.Hover>
           <h2 className="mb-3 text-base font-medium">{result.rightLabel}</h2>
           <p className="mt-2 text-[clamp(1.5rem,3vw,2.1rem)] font-bold tracking-tight">{result.rightValue.toLocaleString("ko-KR")}회</p>
           <p className={`mt-2 text-sm ${result.changeRate >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}`}>
             {result.changeRate >= 0 ? "▲" : "▼"} {Math.abs(result.changeRate)}%
           </p>
-        </HoverCard>
+        </Card.Hover>
       </section>
 
       <section className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">

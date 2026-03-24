@@ -12,9 +12,8 @@ import {
   YAxis,
 } from "recharts";
 import type { DrillLevel, ListenHistoryPoint } from "@/lib/mock/lastfm";
-import HoverCard from "@components/Card/Card";
+import Card from "@components/Card/Card";
 import { CustomTooltip } from "@components/Chart/CustomTooltip";
-import CollapseSection from "@components/CollapseSection";
 import { MOTION_TOKENS } from "@lib/design/tokens";
 import { useMediaQuery } from "@hooks/useMediaQuery";
 
@@ -80,7 +79,7 @@ export default function DrillDownLineChart({ trackId, getData }: Props) {
   const hasDrill = current.level !== "day";
 
   return (
-    <HoverCard>
+    <Card>
       <div className="mb-3 flex items-center gap-1 text-sm">
         {breadcrumbs.map((crumb, i) => {
           const isLast = i === breadcrumbs.length - 1;
@@ -103,12 +102,6 @@ export default function DrillDownLineChart({ trackId, getData }: Props) {
           );
         })}
       </div>
-
-      <CollapseSection visible={hasDrill}>
-        <p className="mb-2 text-xs text-slate-400">
-          막대를 클릭하면 세부 기간으로 이동합니다
-        </p>
-      </CollapseSection>
 
       <div className="h-[240px] w-full min-w-0">
         <ResponsiveContainer width="100%" height="100%">
@@ -158,6 +151,6 @@ export default function DrillDownLineChart({ trackId, getData }: Props) {
           </LineChart>
         </ResponsiveContainer>
       </div>
-    </HoverCard>
+    </Card>
   );
 }
