@@ -1,18 +1,8 @@
-"use client";
-
-import { useCallback, useMemo } from "react";
-import { useParams } from "next/navigation";
 import { Music, User, Disc3, CalendarDays, CalendarCheck, Flame, Trophy, Zap, PieChart } from "lucide-react";
-
 import RecentPlayList from "@/components/dashboard/RecentPlayList";
-import {
-  getTrackCumulativePlays,
-  getTrackDetail,
-  getTrackListenHistory,
-  getTrackRecentPlays,
-} from "@/lib/mock/lastfm";
-import CumulativeLineChart from "@components/Chart/CumulativeLineChart";
-import DrillDownBarChart from "@components/Chart/DrillDownBarChart";
+import { getTrackDetail, getTrackRecentPlays } from "@/lib/mock/lastfm";
+import Card from "@components/Card/Card";
+import TrackChartSection from "@/app/track/[id]/TrackChartSection";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("ko-KR", {
@@ -22,23 +12,18 @@ function formatDate(iso: string) {
   });
 }
 
-export default function TrackDetailPage() {
-  const { id } = useParams<{ id: string }>();
-
-  const detail = useMemo(() => getTrackDetail(id), [id]);
-  const recentPlays = useMemo(() => getTrackRecentPlays(id, 20), [id]);
-
-  const defaultStart = useMemo(() => new Date(detail.firstPlayedAt), [detail.firstPlayedAt]);
-  const defaultEnd = useMemo(() => new Date(detail.lastPlayedAt), [detail.lastPlayedAt]);
-
-  const getCumulative = useCallback(
-    (start: Date, end: Date) => getTrackCumulativePlays(id, start, end),
-    [id],
-  );
+export default async function TrackDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const [detail, recentPlays] = await Promise.all([
+    getTrackDetail(id),
+    getTrackRecentPlays(id, 10),
+  ]);
+  const defaultStart = new Date(detail.firstPlayedAt);
+  const defaultEnd = new Date(detail.lastPlayedAt);
 
   return (
-    <div className="mx-auto max-w-3xl pt-5 py-10">
-      {/* 상단: 트랙 기본 정보 */}
+    <div className="mx-auto max-w-4xl pt-5 py-10">
+      {/* 트랙 기본 정보 */}
       <section className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">{detail.track}</h1>
         <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm text-gray-600">
@@ -57,7 +42,7 @@ export default function TrackDetailPage() {
         </div>
       </section>
 
-      {/* 중간: 기록 요약 */}
+      {/* 기록 요약 */}
       <section
         className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3"
         aria-label="기록 요약"
@@ -112,27 +97,10 @@ export default function TrackDetailPage() {
         </StatGroup>
       </section>
 
-      {/* 중간: 청취 횟수 그래프 (drill-down) */}
-      <section className="mb-8" aria-label="기간별 청취 횟수">
-        <h2 className="mb-3 text-base font-semibold text-gray-900">
-          청취 횟수 추이
-        </h2>
-        <DrillDownBarChart trackId={id} getData={getTrackListenHistory} />
-      </section>
+      {/* 청취 횟수 추이 */}
+      <TrackChartSection id={id} defaultStart={defaultStart} defaultEnd={defaultEnd} />
 
-      {/* 중간: 기간별 누적 청취 그래프 */}
-      <section className="mb-8" aria-label="기간별 누적 청취">
-        <h2 className="mb-3 text-base font-semibold text-gray-900">
-          기간별 누적 청취
-        </h2>
-        <CumulativeLineChart
-          defaultStart={defaultStart}
-          defaultEnd={defaultEnd}
-          getData={getCumulative}
-        />
-      </section>
-
-      {/* 하단: 최근 기록 내역 */}
+      {/* 최근 기록 내역 */}
       <section aria-label="최근 기록 내역">
         <div className="rounded-md border border-slate-200 bg-white">
           <div className="px-4 py-3 border-b border-slate-200">

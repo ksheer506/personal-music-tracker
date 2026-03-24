@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MOTION_TOKENS } from "@lib/design/tokens";
 
 type Props = {
@@ -9,26 +9,23 @@ type Props = {
   children: React.ReactNode;
 };
 
-export default function CollapseSection({
+const Collapsible = ({
   visible,
   durationMs = MOTION_TOKENS.slideMs,
   children,
-}: Props) {
-  const contentRef = useRef<HTMLDivElement>(null);
+}: Props) => {
   const [height, setHeight] = useState<number | "auto">(visible ? "auto" : 0);
+  const contentRef = useRef<HTMLDivElement>(null);
   const firstRender = useRef(true);
 
-  const measure = useCallback(() => {
-    return contentRef.current?.scrollHeight ?? 0;
-  }, []);
-
   useEffect(() => {
+    const measure = () => contentRef.current?.scrollHeight ?? 0;
+
     if (firstRender.current) {
       firstRender.current = false;
       setHeight(visible ? "auto" : 0);
       return;
     }
-
     if (visible) {
       setHeight(measure());
       const id = setTimeout(() => setHeight("auto"), durationMs);
@@ -41,7 +38,7 @@ export default function CollapseSection({
         setHeight(0);
       });
     });
-  }, [visible, durationMs, measure]);
+  }, [visible, durationMs]);
 
   return (
     <div
@@ -58,3 +55,5 @@ export default function CollapseSection({
     </div>
   );
 }
+
+export default Collapsible;

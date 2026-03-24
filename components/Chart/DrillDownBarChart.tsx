@@ -26,9 +26,7 @@ type BreadcrumbItem = {
 };
 
 type Props = {
-  trackId: string;
   getData: (
-    trackId: string,
     level: DrillLevel,
     year?: number,
     month?: number,
@@ -37,14 +35,14 @@ type Props = {
 
 const X_AXIS_HIDE_MAX_WIDTH = 640;
 
-export default function DrillDownBarChart({ trackId, getData }: Props) {
+export default function DrillDownBarChart({ getData }: Props) {
   const hideXAxisLabel = useMediaQuery(`(max-width: ${X_AXIS_HIDE_MAX_WIDTH}px)`);
   const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbItem[]>([
     { label: "연도별", level: "year" },
   ]);
 
   const current = breadcrumbs[breadcrumbs.length - 1];
-  const data = getData(trackId, current.level, current.year, current.month);
+  const data = getData(current.level, current.year, current.month);
 
   const handleClickBarItem = (state: MouseHandlerDataParam) => {
     if (!hasDrill) return;
