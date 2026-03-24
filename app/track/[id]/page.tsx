@@ -121,12 +121,12 @@ function StatGroup({
   children: React.ReactNode;
 }) {
   return (
-    <Card.NoPadding className="p-4 pb-1">
+    <Card className="p-4 pb-1">
       <p className="pb-2 text-md font-semibold tracking-wide text-gray-900">
         {title}
       </p>
       <div className="divide-y divide-slate-100">{children}</div>
-    </Card.NoPadding>
+    </Card>
   );
 }
 

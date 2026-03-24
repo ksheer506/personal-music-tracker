@@ -55,8 +55,11 @@ const Drawer = () => {
         </div>
       </div>
 
-      <div className="md:hidden sticky top-0 z-40 bg-white border-b border-gray-200">
-        <div className="px-4 py-3 flex items-center gap-3">
+      <div
+        style={{ height: MIN_WIDTH }}
+        className="md:hidden flex-none sticky top-0 z-40 bg-white border-b border-gray-200"
+      >
+        <div className="h-full px-4 py-3 flex items-center gap-3">
           <button
             style={{ margin: 0, padding: "0.4rem", borderRadius: "0.5rem" }}
             onClick={toggleDrawer}

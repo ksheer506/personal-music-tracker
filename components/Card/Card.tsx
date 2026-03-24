@@ -14,16 +14,10 @@ interface SimpleCardProps {
 const BASE_CARD_CLASSNAME = "rounded-md border border-slate-200 bg-white";
 
 const SimpleCard = ({ children, className = "" }: SimpleCardProps) => {
-  return (
-    <article className={cn(BASE_CARD_CLASSNAME, "p-4", className)}>
-      {children}
-    </article>
-  )
-}
+  const hasPadding = className.match(/\bp(x|y|s|e|t|r|b|l)?-/);
 
-const NoPaddingCard = ({ children, className = "" }: SimpleCardProps) => {
   return (
-    <article className={cn(BASE_CARD_CLASSNAME, "p-0", className)}>
+    <article className={cn(BASE_CARD_CLASSNAME, hasPadding ? "" : "p-4", className)}>
       {children}
     </article>
   )
@@ -39,7 +33,6 @@ const HoverCard = ({ children }: HoverCardProps) => {
 
 const Card = Object.assign(SimpleCard, {
   Hover: HoverCard,
-  NoPadding: NoPaddingCard,
 })
 
 export default Card
