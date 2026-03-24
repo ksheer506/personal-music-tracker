@@ -104,7 +104,7 @@ export default function DrillDownLineChart({ trackId, getData }: Props) {
       </div>
 
       <div className="h-[240px] w-full min-w-0">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 0, height: 240 }}>
           <LineChart
             data={data}
             margin={{ top: 8, right: 8, left: -2, bottom: 4 }}
