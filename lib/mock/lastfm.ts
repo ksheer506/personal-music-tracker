@@ -22,6 +22,14 @@ export type DashboardData = {
   hourlyHeatmap: number[];
 };
 
+export type RecentPlay = {
+  id: string;
+  track: string;
+  artist: string;
+  album: string;
+  playedAt: string;
+};
+
 const periodMultiplier: Record<PeriodOption, number> = {
   "7d": 0.3,
   "30d": 1,
@@ -70,6 +78,27 @@ const hourlyHeatmap = [
   0.58, 0.44, 0.3, 0.23, 0.17, 0.11, 0.09,
 ];
 
+const recentPlaySeeds = [
+  { id: "rp01", track: "Robbers", artist: "The 1975", album: "The 1975", minutesAgo: 4 },
+  { id: "rp02", track: "Jigsaw Falling Into Place", artist: "Radiohead", album: "In Rainbows", minutesAgo: 13 },
+  { id: "rp03", track: "Feather", artist: "Nujabes", album: "Modal Soul", minutesAgo: 29 },
+  { id: "rp04", track: "TOMBOY", artist: "혁오", album: "23", minutesAgo: 47 },
+  { id: "rp05", track: "Something About Us", artist: "Daft Punk", album: "Discovery", minutesAgo: 66 },
+  { id: "rp06", track: "Time to Pretend", artist: "MGMT", album: "Oracular Spectacular", minutesAgo: 95 },
+  { id: "rp07", track: "Space Song", artist: "Beach House", album: "Depression Cherry", minutesAgo: 138 },
+  { id: "rp08", track: "New Person, Same Old Mistakes", artist: "Tame Impala", album: "Currents", minutesAgo: 182 },
+  { id: "rp09", track: "Midnight City", artist: "M83", album: "Hurry Up, We're Dreaming", minutesAgo: 230 },
+  { id: "rp10", track: "Dancing in the Moonlight", artist: "Toploader", album: "Onka's Big Moka", minutesAgo: 276 },
+  { id: "rp11", track: "Take Five", artist: "The Dave Brubeck Quartet", album: "Time Out", minutesAgo: 331 },
+  { id: "rp12", track: "Dreams", artist: "Fleetwood Mac", album: "Rumours", minutesAgo: 395 },
+  { id: "rp13", track: "Viva La Vida", artist: "Coldplay", album: "Viva La Vida or Death and All His Friends", minutesAgo: 463 },
+  { id: "rp14", track: "Runaway", artist: "Kanye West", album: "My Beautiful Dark Twisted Fantasy", minutesAgo: 544 },
+  { id: "rp15", track: "Hard to Explain", artist: "The Strokes", album: "Is This It", minutesAgo: 612 },
+  { id: "rp16", track: "Bad Guy", artist: "Billie Eilish", album: "When We All Fall Asleep, Where Do We Go?", minutesAgo: 705 },
+  { id: "rp17", track: "Get Lucky", artist: "Daft Punk", album: "Random Access Memories", minutesAgo: 812 },
+  { id: "rp18", track: "Blinding Lights", artist: "The Weeknd", album: "After Hours", minutesAgo: 920 },
+];
+
 export function getDashboardData(period: PeriodOption): DashboardData {
   const multiplier = periodMultiplier[period];
   const scaledMetrics = baseMetrics.map((metric) => ({
@@ -93,6 +122,21 @@ export function getDashboardData(period: PeriodOption): DashboardData {
     weekdayPattern: scaleRank(weekdayPattern),
     hourlyHeatmap,
   };
+}
+
+export function getRecentPlays(limit = 15): RecentPlay[] {
+  const now = Date.now();
+
+  return recentPlaySeeds
+    .map((item) => ({
+      id: item.id,
+      track: item.track,
+      artist: item.artist,
+      album: item.album,
+      playedAt: new Date(now - item.minutesAgo * 60 * 1000).toISOString(),
+    }))
+    .sort((a, b) => new Date(b.playedAt).getTime() - new Date(a.playedAt).getTime())
+    .slice(0, limit);
 }
 
 export type ComparePreset = "month" | "weekend" | "night";
