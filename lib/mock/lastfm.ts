@@ -139,6 +139,201 @@ export function getRecentPlays(limit = 15): RecentPlay[] {
     .slice(0, limit);
 }
 
+export type TrackDetail = {
+  id: string;
+  track: string;
+  artist: string;
+  album: string;
+  firstPlayedAt: string;
+  lastPlayedAt: string;
+  longestStreakDays: number;
+  totalPlays: number;
+  monthlyTop1Count: number;
+  monthlyTop3Count: number;
+  monthlyTop10Count: number;
+  maxDailyPlays: number;
+  scrobbleSharePercent: number;
+};
+
+export type DrillLevel = "year" | "month" | "day";
+
+export type ListenHistoryPoint = {
+  label: string;
+  value: number;
+  drillKey: string | null;
+};
+
+const trackDetailSeeds: Record<string, Omit<TrackDetail, "id">> = {
+  t1: {
+    track: "Jigsaw Falling Into Place",
+    artist: "Radiohead",
+    album: "In Rainbows",
+    firstPlayedAt: "2019-04-12T14:22:00.000Z",
+    lastPlayedAt: "2026-03-24T08:10:00.000Z",
+    longestStreakDays: 32,
+    totalPlays: 1012,
+    monthlyTop1Count: 7,
+    monthlyTop3Count: 18,
+    monthlyTop10Count: 47,
+    maxDailyPlays: 14,
+    scrobbleSharePercent: 8.9,
+  },
+  t2: {
+    track: "Robbers",
+    artist: "The 1975",
+    album: "The 1975",
+    firstPlayedAt: "2023-01-03T20:15:00.000Z",
+    lastPlayedAt: "2026-03-23T22:45:00.000Z",
+    longestStreakDays: 11,
+    totalPlays: 287,
+    monthlyTop1Count: 2,
+    monthlyTop3Count: 6,
+    monthlyTop10Count: 19,
+    maxDailyPlays: 9,
+    scrobbleSharePercent: 1.8,
+  },
+  t3: {
+    track: "Feather",
+    artist: "Nujabes",
+    album: "Modal Soul",
+    firstPlayedAt: "2022-11-18T09:30:00.000Z",
+    lastPlayedAt: "2026-03-24T07:20:00.000Z",
+    longestStreakDays: 19,
+    totalPlays: 341,
+    monthlyTop1Count: 4,
+    monthlyTop3Count: 9,
+    monthlyTop10Count: 24,
+    maxDailyPlays: 11,
+    scrobbleSharePercent: 2.4,
+  },
+};
+
+const defaultTrackDetail: Omit<TrackDetail, "id"> = {
+  track: "Unknown Track",
+  artist: "Unknown Artist",
+  album: "Unknown Album",
+  firstPlayedAt: "2024-01-01T00:00:00.000Z",
+  lastPlayedAt: "2026-03-24T00:00:00.000Z",
+  longestStreakDays: 4,
+  totalPlays: 42,
+  monthlyTop1Count: 0,
+  monthlyTop3Count: 1,
+  monthlyTop10Count: 3,
+  maxDailyPlays: 5,
+  scrobbleSharePercent: 0.3,
+};
+
+function seededRandom(seed: number) {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
+export function getTrackDetail(trackId: string): TrackDetail {
+  const seed = trackDetailSeeds[trackId];
+  return { id: trackId, ...(seed ?? defaultTrackDetail) };
+}
+
+export function getTrackListenHistory(
+  trackId: string,
+  level: DrillLevel,
+  year?: number,
+  month?: number,
+): ListenHistoryPoint[] {
+  const numericSeed = trackId.split("").reduce((s, c) => s + c.charCodeAt(0), 0);
+
+  if (level === "year") {
+    return [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026].map((y, i) => ({
+      label: `${y}년`,
+      value: Math.round(30 + seededRandom(numericSeed + i * 7) * 100),
+      drillKey: `${y}`,
+    }));
+  }
+
+  if (level === "month" && year != null) {
+    const monthCount = year === 2026 ? 3 : 12;
+    return Array.from({ length: monthCount }, (_, i) => ({
+      label: `${i + 1}월`,
+      value: Math.round(2 + seededRandom(numericSeed + year * 13 + i * 3) * 20),
+      drillKey: `${year}-${i + 1}`,
+    }));
+  }
+
+  if (level === "day" && year != null && month != null) {
+    const daysInMonth = new Date(year, month, 0).getDate();
+    return Array.from({ length: daysInMonth }, (_, i) => ({
+      label: `${i + 1}일`,
+      value: Math.round(seededRandom(numericSeed + year * 17 + month * 5 + i) * 4),
+      drillKey: null,
+    }));
+  }
+
+  return [];
+}
+
+export function getTrackRecentPlays(trackId: string, limit = 20): RecentPlay[] {
+  const detail = getTrackDetail(trackId);
+  const now = Date.now();
+
+  return Array.from({ length: limit }, (_, i) => ({
+    id: `${trackId}-rp${i}`,
+    track: detail.track,
+    artist: detail.artist,
+    album: detail.album,
+    playedAt: new Date(now - (i * 137 + 4) * 60 * 1000).toISOString(),
+  }));
+}
+
+export type CumulativePoint = {
+  label: string;
+  cumulative: number;
+};
+
+export function getTrackCumulativePlays(
+  trackId: string,
+  startDate: Date,
+  endDate: Date,
+): CumulativePoint[] {
+  const numericSeed = trackId.split("").reduce((s, c) => s + c.charCodeAt(0), 0);
+  const msPerDay = 86_400_000;
+  const totalDays = Math.max(1, Math.round((endDate.getTime() - startDate.getTime()) / msPerDay));
+
+  const bucketByMonth = totalDays > 90;
+  const points: CumulativePoint[] = [];
+  let cumulative = 0;
+
+  if (bucketByMonth) {
+    const cursor = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+    const endMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+
+    while (cursor <= endMonth) {
+      const y = cursor.getFullYear();
+      const m = cursor.getMonth();
+      const daily = Math.round(1 + seededRandom(numericSeed + y * 13 + m * 7) * 5);
+      const daysInMonth = new Date(y, m + 1, 0).getDate();
+      cumulative += daily * daysInMonth;
+      points.push({
+        label: `${y}.${String(m + 1).padStart(2, "0")}`,
+        cumulative,
+      });
+      cursor.setMonth(cursor.getMonth() + 1);
+    }
+  } else {
+    for (let d = 0; d <= totalDays; d++) {
+      const date = new Date(startDate.getTime() + d * msPerDay);
+      const dayPlays = Math.round(seededRandom(numericSeed + d * 3 + date.getDay()) * 4);
+      cumulative += dayPlays;
+      const m = date.getMonth() + 1;
+      const day = date.getDate();
+      points.push({
+        label: `${m}/${day}`,
+        cumulative,
+      });
+    }
+  }
+
+  return points;
+}
+
 export type ComparePreset = "month" | "weekend" | "night";
 
 export function getCompareData(preset: ComparePreset) {

@@ -1,6 +1,7 @@
 "use client";
 
-import HoverCard from "@components/Card/HoverCard";
+import HoverCard from "@components/Card/Card";
+import { CustomTooltip } from "@components/Chart/CustomTooltip";
 import { useMediaQuery } from "@hooks/useMediaQuery";
 import {
   Bar,
@@ -26,12 +27,13 @@ type SimpleBarChartProps = {
   onHighlightChange?: (id: string | null) => void;
 };
 
-type CustomTooltipProps = {
+export type CustomTooltipProps = {
   active?: boolean;
   payload?: ReadonlyArray<{
     value?: number | string | ReadonlyArray<number | string>;
-    payload?: BarItem;
+    payload?: Record<string, unknown>;
   }>;
+  unitLabel?: string;
 };
 
 const X_AXIS_HIDE_MAX_WIDTH = 640;
@@ -48,7 +50,11 @@ export default function SimpleBarChart({
     <HoverCard>
       <h3 className="mb-3 text-base font-medium">{title}</h3>
       <div className="h-[220px] w-full min-w-0">
-        <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 0, height: 220 }}>
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+          initialDimension={{ width: 0, height: 220 }}
+        >
           <BarChart
             data={items}
             margin={{
@@ -67,7 +73,11 @@ export default function SimpleBarChart({
             }}
             onMouseLeave={() => onHighlightChange?.(null)}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#cbd5e1" vertical={false} />
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#cbd5e1"
+              vertical={false}
+            />
             <XAxis
               dataKey="label"
               axisLine={false}
@@ -88,7 +98,8 @@ export default function SimpleBarChart({
             />
             <Bar dataKey="value" radius={[10, 10, 0, 0]}>
               {items.map((item) => {
-                const isDimmed = Boolean(highlightedId) && highlightedId !== item.id;
+                const isDimmed =
+                  Boolean(highlightedId) && highlightedId !== item.id;
                 return (
                   <Cell
                     key={item.id}
@@ -102,22 +113,5 @@ export default function SimpleBarChart({
         </ResponsiveContainer>
       </div>
     </HoverCard>
-  );
-}
-
-function CustomTooltip({ active, payload }: CustomTooltipProps) {
-  if (!active || !payload?.length) {
-    return null;
-  }
-  const firstItem = payload[0];
-  const itemLabel = firstItem?.payload?.label ?? "";
-  const rawValue = firstItem?.value;
-  const normalizedValue = Array.isArray(rawValue) ? rawValue[0] : rawValue ?? 0;
-
-  return (
-    <div className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm">
-      <span className="font-medium text-slate-800">{itemLabel}</span>
-      <span className="text-slate-600">{normalizedValue}회</span>
-    </div>
   );
 }

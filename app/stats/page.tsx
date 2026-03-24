@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import PeriodFilter from "@/components/dashboard/PeriodFilter";
-import SimpleBarChart from "@/components/dashboard/SimpleBarChart";
+import SimpleBarChart from "@components/Chart/SimpleBarChart";
 import type { PeriodOption } from "@/lib/design/tokens";
 import { getDashboardData } from "@/lib/mock/lastfm";
 
@@ -37,7 +37,9 @@ export default function StatsPage() {
 
   return (
     <>
-      <h1 className="m-0 text-[clamp(1.5rem,2vw,2rem)] font-semibold tracking-tight">상세 통계</h1>
+      <h1 className="m-0 text-[clamp(1.5rem,2vw,2rem)] font-semibold tracking-tight">
+        상세 통계
+      </h1>
       <p className="mt-2 text-slate-500 dark:text-slate-400">
         필터 패널과 차트-리스트 동기화로 아티스트별 변화를 세밀하게 탐색합니다.
       </p>
@@ -47,7 +49,9 @@ export default function StatsPage() {
           <h2 className="mb-3 text-base font-medium">필터</h2>
           <p className="text-slate-500 dark:text-slate-400">기간</p>
           <PeriodFilter value={period} onChange={setPeriod} />
-          <p className="mt-4 text-slate-500 dark:text-slate-400">최소 재생 수</p>
+          <p className="mt-4 text-slate-500 dark:text-slate-400">
+            최소 재생 수
+          </p>
           <input
             type="range"
             min={10}
@@ -56,7 +60,9 @@ export default function StatsPage() {
             className="w-full accent-indigo-500"
             onChange={(event) => setMinPlays(Number(event.target.value))}
           />
-          <p className="text-slate-500 dark:text-slate-400">{minPlays}회 이상</p>
+          <p className="text-slate-500 dark:text-slate-400">
+            {minPlays}회 이상
+          </p>
           <p className="mt-4 text-slate-500 dark:text-slate-400">정렬</p>
           <select
             value={sortBy}
@@ -86,7 +92,9 @@ export default function StatsPage() {
                     <li
                       key={artist.id}
                       className={`flex items-center justify-between gap-2 border-b border-slate-200 py-2 transition-colors duration-150 ease-out last:border-b-0 dark:border-slate-700 ${
-                        hoveredId === artist.id ? "text-indigo-600 dark:text-indigo-300" : ""
+                        hoveredId === artist.id
+                          ? "text-indigo-600 dark:text-indigo-300"
+                          : ""
                       }`}
                       onMouseEnter={() => setHoveredId(artist.id)}
                       onMouseLeave={() => setHoveredId(null)}

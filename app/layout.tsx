@@ -13,7 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko">
       <body className="md:flex">
         <Drawer />
-        <main className="w-full min-h-dvh md:h-dvh p-8 overflow-y-auto overflow-x-hidden">
+        <main className="w-full min-h-dvh md:h-dvh p-4 md:p-8 overflow-y-auto overflow-x-hidden">
           {children}
         </main>
       </body>

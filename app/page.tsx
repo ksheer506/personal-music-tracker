@@ -5,10 +5,10 @@ import { useMemo, useState } from "react";
 import Heatmap from "@/components/dashboard/Heatmap";
 import KpiCard from "@/components/dashboard/KpiCard";
 import PeriodFilter from "@/components/dashboard/PeriodFilter";
-import SimpleBarChart from "@/components/dashboard/SimpleBarChart";
+import SimpleBarChart from "@components/Chart/SimpleBarChart";
 import type { PeriodOption } from "@/lib/design/tokens";
 import { getDashboardData, getRecentPlays } from "@/lib/mock/lastfm";
-import { formatRelativePlayedAt } from "@lib/date";
+import RecentPlayList from "@/components/dashboard/RecentPlayList";
 
 export default function Home() {
   const [period, setPeriod] = useState<PeriodOption>("30d");
@@ -18,12 +18,14 @@ export default function Home() {
   return (
     <div className="items-center justify-items-center min-h-screen pb-20 gap-16">
       <div className="w-full flex flex-col gap-8 row-start-2 items-center">
-
         <section className="my-6">
           <PeriodFilter value={period} onChange={setPeriod} />
         </section>
 
-        <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 w-full" aria-label="KPI 카드">
+        <section
+          className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 w-full"
+          aria-label="KPI 카드"
+        >
           {data.metrics.map((metric) => (
             <KpiCard
               key={metric.id}
@@ -47,17 +49,7 @@ export default function Home() {
             <div className="px-4 py-3 border-slate-200">
               <h2 className="text-base font-semibold">최근 기록된 음악</h2>
             </div>
-            <ul className="divide-y divide-gray-100">
-              {recentPlays.map((play) => (
-                <li key={play.id} className="px-4 py-3 flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
-                  <div className="min-w-0">
-                    <p className="font-medium text-gray-900 truncate">{play.track}</p>
-                    <p className="text-sm text-gray-600 truncate">{play.artist} · {play.album}</p>
-                  </div>
-                  <p className="text-sm text-gray-400 shrink-0">{formatRelativePlayedAt(play.playedAt)}</p>
-                </li>
-              ))}
-            </ul>
+            <RecentPlayList plays={recentPlays} />
           </div>
         </section>
       </div>
