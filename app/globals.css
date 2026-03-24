@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #7a7cdb;
+  --color-primary-hover: #6366f1;
+  
+  --primary: var(--color-primary);
+  --primary-hover: var(--color-primary-hover);
+}
+
 @layer base {
   * {
     box-sizing: border-box;

@@ -7,7 +7,7 @@ type HeatmapProps = {
 
 function getHeatColor(value: number) {
   const alpha = 0.18 + value * 0.72;
-  return `color-mix(in srgb, var(--primary) ${Math.round(alpha * 100)}%, transparent)`;
+  return `color-mix(in srgb, var(--color-primary) ${Math.round(alpha * 100)}%, transparent)`;
 }
 
 export default function Heatmap({ title, values }: HeatmapProps) {
