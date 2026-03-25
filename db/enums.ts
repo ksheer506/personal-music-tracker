@@ -2,9 +2,9 @@ import { toEnumValues } from "@lib/enum";
 import { pgEnum } from "drizzle-orm/pg-core";
 
 /**
- * - `"main"`: 대표 아티스트
- * - `"contributor"`: 참여 아티스트
- * - `"various"`: VariousArtist
+ * - `"main"`: 대표 아티스트(main artist)
+ * - `"contributor"`: 참여 아티스트(feature, with artist)
+ * - `"various"`: Various Artist
  */
 export const albumArtistRoleEnum = pgEnum("album_artist_role", [
   "main",

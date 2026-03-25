@@ -7,37 +7,37 @@ import { ScrobbleRequest } from "@service/Scrobble/types";
 import SpotifyService from "@service/Spotify/SpotifyService";
 import TrackService from "@service/Track/TrackService";
 import dayjs from "dayjs";
-import { TRACK_ARTIST_ROLE } from "@db/enums";
 
 class ScrobbleService {
   async create(request: ScrobbleRequest) {
-    const { track, artist } = request;
-    const parsedArtists = parseArtists(track, artist);
-    const externalIds = await new SpotifyService().matchArtist(track, parsedArtists);
+    const { title, artist } = request;
+    const parsedArtists = parseArtists(title, artist);
+    const externalIds = await new SpotifyService().matchArtist(title, parsedArtists);
 
     return db.transaction(async (tx) => {
       const artists = await new ArtistService(tx).resolveMany(
         parsedArtists.map((artist, i) => ({ ...artist, externalId: externalIds[i] }))
       );
       const artistsWithRole = artists.map((a, i) => ({ ...a, role: parsedArtists[i].role }))
-      const mainArtist = artistsWithRole.find((a) => a.role === TRACK_ARTIST_ROLE.main);
-      const album = await new AlbumService().findOrCreate({
-        name: request.album,
+      const album = await new AlbumService(tx).findOrCreate({
+        title: request.album,
         /** TODO:ksh: multiple artist인 경우? - 2026.03.20 */
-        artistId: mainArtist?.id,
+        artists: artistsWithRole,
       });
       const track = await new TrackService(tx).findOrCreate({
-        title: request.track,
+        title,
         albumId: album.id,
         durationSec: request.durationSec,
         artists: artistsWithRole,
       });
 
-      await tx.insert(scrobbles).values({
+      const [inserted] = await tx.insert(scrobbles).values({
         userId: request.userId,
         trackId: track.id,
         playedAt: dayjs(request.playedAt).toDate(),
-      });
+      })
+        .returning();
+      return inserted;
     });
   }
 }

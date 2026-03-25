@@ -7,3 +7,4 @@ migration_lock.toml
 
 .vscode
 .next
+.test

@@ -1,5 +1,5 @@
 import { albumArtistRoleEnum, trackArtistRoleEnum } from "@db/enums";
-import { artists, trackArtists, tracks } from "@db/schema";
+import { albumArtists, albums, artists, trackArtists, tracks } from "@db/schema";
 
 /* Enum */
 
@@ -11,7 +11,11 @@ export type TrackArtistRole = (typeof trackArtistRoleEnum.enumValues)[number];
 
 export type Artist = typeof artists.$inferSelect;
 
+export type ArtistWithRole = Artist & Pick<TrackArtist, "role">;
+
 export type Track = typeof tracks.$inferSelect;
+
+export type Album = typeof albums.$inferSelect;
 
 export type TrackArtist = typeof trackArtists.$inferInsert;
 
@@ -20,5 +24,9 @@ export type TrackArtist = typeof trackArtists.$inferInsert;
 export type ArtistInsert = typeof artists.$inferInsert;
 
 export type TrackInsert = typeof tracks.$inferInsert;
+
+export type AlbumInsert = typeof albums.$inferInsert;
+
+export type AlbumArtistInsert = typeof albumArtists.$inferInsert;
 
 export type TrackArtistInsert = typeof trackArtists.$inferInsert;

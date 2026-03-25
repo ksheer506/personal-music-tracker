@@ -32,15 +32,19 @@ export const parseArtists = (track: string, artist: string) => {
   /* 2. track: "SomeSong(feat. C)" */
   if (features) {
     parseMultiples(features).forEach((name) => {
-      parsedArtists.add(name)
-      result.push({ name, role: TRACK_ARTIST_ROLE.feature })
+      if (!parsedArtists.has(name)) {
+        parsedArtists.add(name)
+        result.push({ name, role: TRACK_ARTIST_ROLE.feature })
+      }
     })
   }
   /* 3. track: "SomeSong(with. C)" */
   if (withArtists) {
     parseMultiples(withArtists).forEach((name) => {
-      parsedArtists.add(name)
-      result.push({ name, role: TRACK_ARTIST_ROLE.with })
+      if (!parsedArtists.has(name)) {
+        parsedArtists.add(name)
+        result.push({ name, role: TRACK_ARTIST_ROLE.with })
+      }
     })
   }
 
