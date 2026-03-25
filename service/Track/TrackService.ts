@@ -1,49 +1,34 @@
-import { db } from "@db/index";
-import { trackArtists, tracks } from "@db/schema";
+import { Tx } from "@/types/db";
+import { Track } from "@db/types";
+import TrackRepository from "@repository/Track/TrackRepository";
 import { TrackCreateRequest } from "@service/Track/types";
-import { and, eq, exists, inArray } from "drizzle-orm";
 
 class TrackService {
-  findOrCreate(request: TrackCreateRequest) {
-    const { name, albumId, rawArtist, artists } = request;
+  #repository: TrackRepository;
 
-    return db.transaction(async (tx) => {
-      const track = await tx.query.tracks.findFirst({
-        where: and(
-          eq(tracks.title, name),
-          exists(
-            tx.select().from(trackArtists).where(
-              and(
-                eq(trackArtists.trackId, tracks.id),
-                inArray(trackArtists.artistId, artists.map((a) => a.id))
-              )
-            )
-          )
-        ),
-      });
+  constructor(tx: Tx) {
+    this.#repository = new TrackRepository(tx);
+  }
 
-      if (track) {
-        return track;
-      }
-      const inserted = await tx
-        .insert(tracks)
-        .values({
-          title: name,
-          albumId: albumId ?? null,
-        })
-        .returning();
+  async findOrCreate(request: TrackCreateRequest): Promise<Track> {
+    const { artists, ...t } = request;
+    const existing = await this.#repository.findByTitleAndArtistIds(
+      t.title,
+      artists.map((a) => a.id),
+    );
+    if (existing) {
+      return existing;
+    }
+    const inserted = await this.#repository.insert(t);
 
-      /* trackArtists N:M 처리 */
-      await tx.insert(trackArtists).values(
-        artists.map((artist) => ({
-          trackId: inserted[0].id,
-          artistId: artist.id,
-          role: artist.role,
-        }))
-      );
-
-      return inserted[0];
-    });
+    await this.#repository.insertArtists(
+      artists.map((artist) => ({
+        trackId: inserted.id,
+        artistId: artist.id,
+        role: artist.role,
+      })),
+    );
+    return inserted;
   }
 }
 

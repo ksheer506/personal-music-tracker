@@ -1,7 +1,7 @@
 import { artists } from "@db/schema";
 import { eq } from "drizzle-orm";
 import { Tx } from "@/types/db";
-import { ArtistInsertPayload } from "@repository/Artist/types";
+import { ArtistInsert } from "@db/types";
 
 class ArtistRepository {
   #tx: Tx;
@@ -40,7 +40,7 @@ class ArtistRepository {
     await this.#tx.update(artists).set({ externalId }).where(eq(artists.id, id));
   }
 
-  async insertMany(values: ArtistInsertPayload[]) {
+  async insertMany(values: ArtistInsert[]) {
     if (values.length === 0) return [];
     return this.#tx
       .insert(artists)

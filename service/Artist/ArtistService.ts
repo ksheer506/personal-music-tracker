@@ -1,7 +1,7 @@
 import { Artist } from "@db/types";
 import ArtistRepository from "@repository/Artist/ArtistRepository";
 import { ArtistResolveRequest } from "@service/Artist/types";
-import { buildArtistLookupKeys, getArtistSortName, getLatestExternalId } from "@service/Artist/utils";
+import { buildArtistLookupFilters, getArtistSortName, getLatestExternalId } from "@service/Artist/utils";
 import { Tx } from "@/types/db";
 
 class ArtistService {
@@ -38,17 +38,16 @@ class ArtistService {
   }
 
   async resolveMany(request: ArtistResolveRequest[]) {
-    const { externalIds, names } = buildArtistLookupKeys(request);
-    /* 1. 기존 아티스트 한 번에 조회 */
+    const { externalIds, names } = buildArtistLookupFilters(request);
+    /* 1. 기존 아티스트 조회 */
     const existing = await this.#repository.findManyByExternalIdOrName(externalIds, names);
-
-    const toUpdateExternalId = existing.filter((a) => !a.externalId && !!getLatestExternalId(request, a));
     const result = new Map(
       existing.map((a) => [
         a.name,
         { ...a, externalId: getLatestExternalId(request, a) },
       ]),
     );
+    const toUpdateExternalId = existing.filter((a) => !a.externalId && !!getLatestExternalId(request, a));
 
     /* `externalId`가 null이었던 항목 업데이트 */
     await Promise.all(

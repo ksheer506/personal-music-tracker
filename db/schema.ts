@@ -27,6 +27,7 @@ export const artists = pgTable(
   "artists",
   {
     id: uuid("id").defaultRandom().primaryKey(),
+    /** Spotify에서 조회한 아티스트 ID */
     externalId: text("external_id"),
     name: text("name").notNull(),
     /** 아티스트 이름 정렬을 위한 필드. "the", "a" 등 제거, 대소문자 통일, 악센트 제거 */
@@ -75,7 +76,7 @@ export const albumArtists = pgTable(
 export const tracks = pgTable("tracks", {
   id: uuid("id").defaultRandom().primaryKey(),
   title: text("title").notNull(),
-  albumId: uuid("album_id").references(() => albums.id),
+  albumId: uuid("album_id").notNull().references(() => albums.id, { onDelete: "restrict" }),
   durationSec: integer("duration_sec"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
@@ -88,9 +89,14 @@ export const trackArtists = pgTable(
     trackId: uuid("track_id")
       .notNull()
       .references(() => tracks.id, { onDelete: "cascade" }),
+    /** 
+     * Track과 Artist는 일반적으로 N:1 관계이지만,  
+     * 피쳐링, 참여, 듀엣 등의 조건에서 "A, B"를 하나의 Artist로 보지 않고
+     * "A", "B" 각각의 Artist에 대한 Scrobble 기록으로 관리하기 위해 N:M 관계로 설정.
+     * */
     artistId: uuid("artist_id")
       .notNull()
-      .references(() => artists.id),
+      .references(() => artists.id, { onDelete: "cascade" }),
     role: trackArtistRoleEnum("role").notNull().default("main"),
   },
   (t) => [
@@ -100,7 +106,7 @@ export const trackArtists = pgTable(
   ],
 );
 
-/* Scrobble (TimescaleDB) */
+/* Scrobble */
 export const scrobbles = pgTable(
   "scrobbles",
   {
@@ -110,7 +116,7 @@ export const scrobbles = pgTable(
       .references(() => users.id),
     trackId: uuid("track_id")
       .notNull()
-      .references(() => tracks.id),
+      .references(() => tracks.id, { onDelete: "restrict" }),
     playedAt: timestamp("played_at", { withTimezone: true }).notNull(),
     durationSec: integer("duration_sec"),
     source: text("source"),

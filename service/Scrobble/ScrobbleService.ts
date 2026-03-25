@@ -6,7 +6,7 @@ import ArtistService from "@service/Artist/ArtistService";
 import { ScrobbleRequest } from "@service/Scrobble/types";
 import SpotifyService from "@service/Spotify/SpotifyService";
 import TrackService from "@service/Track/TrackService";
-import moment from "moment";
+import dayjs from "dayjs";
 import { TRACK_ARTIST_ROLE } from "@db/enums";
 
 class ScrobbleService {
@@ -26,17 +26,17 @@ class ScrobbleService {
         /** TODO:ksh: multiple artist인 경우? - 2026.03.20 */
         artistId: mainArtist?.id,
       });
-      const track = await new TrackService().findOrCreate({
-        name: request.track,
-        albumId: album?.id,
-        rawArtist: request.artist,
+      const track = await new TrackService(tx).findOrCreate({
+        title: request.track,
+        albumId: album.id,
+        durationSec: request.durationSec,
         artists: artistsWithRole,
       });
 
       await tx.insert(scrobbles).values({
         userId: request.userId,
-        trackId: track.id as string,
-        playedAt: moment(request.playedAt).toDate(),
+        trackId: track.id,
+        playedAt: dayjs(request.playedAt).toDate(),
       });
     });
   }

@@ -1,8 +1,5 @@
-import { Artist, TrackArtist } from "@db/types";
+import { Artist, TrackArtist, TrackInsert } from "@db/types";
 
-export interface TrackCreateRequest {
-  name: string;
-  albumId?: string;
-  rawArtist: string;
+export interface TrackCreateRequest extends TrackInsert {
   artists: (Artist & Pick<TrackArtist, "role">)[];
 }
