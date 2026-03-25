@@ -62,14 +62,14 @@ export default async function TrackDetailPage({ params }: { params: Promise<{ id
 
         <StatGroup title="청취 기록">
           <StatItem
-            icon={<Flame className="h-4 w-4 text-orange-500" />}
-            label="최장 연속 재생"
-            value={`${detail.longestStreakDays}일`}
-          />
-          <StatItem
             icon={<Zap className="h-4 w-4 text-rose-500" />}
             label="하루 최다 재생"
             value={`${detail.maxDailyPlays}회`}
+          />
+          <StatItem
+            icon={<Flame className="h-4 w-4 text-orange-500" />}
+            label="최장 연속 재생일"
+            value={`${detail.longestStreakDays}일`}
           />
           <StatItem
             icon={<PieChart className="h-4 w-4 text-teal-500" />}
