@@ -17,7 +17,7 @@ export type Track = typeof tracks.$inferSelect;
 
 export type Album = typeof albums.$inferSelect;
 
-export type TrackArtist = typeof trackArtists.$inferInsert;
+export type TrackArtist = typeof trackArtists.$inferSelect;
 
 /* Insert */
 

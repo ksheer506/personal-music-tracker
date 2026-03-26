@@ -43,6 +43,13 @@
       "when": 1774427200898,
       "tag": "0005_cynical_hellion",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1774510138496,
+      "tag": "0006_add-album-external-id",
+      "breakpoints": true
     }
   ]
 }

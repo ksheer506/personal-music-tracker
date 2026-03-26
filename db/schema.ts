@@ -36,12 +36,17 @@ export const albums = pgTable(
   "albums",
   {
     id: uuid("id").defaultRandom().primaryKey(),
+    /** MusicBrainz에서 조회한 앨범 ID */
+    externalId: text("external_id"),
     title: text("title").notNull(),
     releaseAt: date("release_at"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
   },
+  (t) => [
+    uniqueIndex("albums_external_id_unique").on(t.externalId),
+  ],
 );
 
 export const albumArtists = pgTable(

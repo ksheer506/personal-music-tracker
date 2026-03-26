@@ -1,6 +1,6 @@
 import { AlbumArtistRole, TrackArtistRole } from "@db/types";
 
-export const getAlbumArtistRole = (role: TrackArtistRole | undefined): AlbumArtistRole | undefined => {
+export const getAlbumArtistRole = (role: TrackArtistRole): AlbumArtistRole => {
   switch (role) {
     case "main":
       return "main";
