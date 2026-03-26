@@ -1,0 +1,24 @@
+---
+description: Date 변환·조작 시 dayjs를 사용하도록 강제
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
+---
+
+# dayjs 사용 규칙
+
+날짜 변환·조작·포맷팅 시 반드시 `dayjs`를 사용한다. `new Date()` 직접 조작 금지.
+
+```typescript
+// DON'T
+const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+
+const formatted = new Date().toISOString().slice(0, 10);
+
+// DO
+import dayjs from "dayjs";
+
+const tomorrow = dayjs().add(1, "day");
+
+const formatted = dayjs().format("YYYY-MM-DD");
+```
