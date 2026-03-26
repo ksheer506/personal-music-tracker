@@ -13,16 +13,6 @@ import {
 } from "drizzle-orm/pg-core";
 import { albumArtistRoleEnum, trackArtistRoleEnum } from "./enums";
 
-export const users = pgTable("users", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  email: text("email").notNull().unique(),
-  password: text("password").notNull(),
-  username: text("username").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-});
-
 export const artists = pgTable(
   "artists",
   {
@@ -111,9 +101,8 @@ export const scrobbles = pgTable(
   "scrobbles",
   {
     id: bigserial("id", { mode: "number" }).primaryKey(),
-    userId: uuid("user_id")
-      .notNull()
-      .references(() => users.id),
+    /** Supabase auth.users(id) */
+    userId: uuid("user_id").notNull(),
     trackId: uuid("track_id")
       .notNull()
       .references(() => tracks.id, { onDelete: "restrict" }),

@@ -1,9 +1,5 @@
 import { relations } from "drizzle-orm";
-import { albumArtists, albums, artists, scrobbles, trackArtists, tracks, users } from "./schema";
-
-export const usersRelations = relations(users, ({ many }) => ({
-  scrobbles: many(scrobbles),
-}));
+import { albumArtists, albums, artists, scrobbles, trackArtists, tracks } from "./schema";
 
 export const artistsRelations = relations(artists, ({ many }) => ({
   trackArtists: many(trackArtists),
@@ -47,10 +43,6 @@ export const trackArtistsRelations = relations(trackArtists, ({ one }) => ({
 }));
 
 export const scrobblesRelations = relations(scrobbles, ({ one }) => ({
-  user: one(users, {
-    fields: [scrobbles.userId],
-    references: [users.id],
-  }),
   track: one(tracks, {
     fields: [scrobbles.trackId],
     references: [tracks.id],
