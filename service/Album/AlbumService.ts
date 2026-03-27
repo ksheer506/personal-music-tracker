@@ -23,7 +23,6 @@ class AlbumService {
       throw new Error(`${LEAD_ROLES_ERROR_MESSAGE} 입력값: "${leadRole}"`);
     }
     const artistIds = artists.map((a) => a.id);
-
     const existing = album.externalId
       ? await this.#repository.findByExternalId(album.externalId)
       : (await this.#repository.findManyByTitleAndArtistIds(album.title, artistIds))[0];
@@ -59,8 +58,8 @@ class AlbumService {
     const demoteIds = existing.albumArtists
       .filter((a) => a.role !== ALBUM_ARTIST_ROLE.various)
       .map((a) => a.artistId);
-    const hasContributor = existing.albumArtists.some((a) => a.role === ALBUM_ARTIST_ROLE.contributor);
 
+    const hasContributor = existing.albumArtists.some((a) => a.role === ALBUM_ARTIST_ROLE.contributor);
     const needsDemotion = demoteIds.length > 0 && (
       incomingRole === ALBUM_ARTIST_ROLE.various ||
       (incomingRole === ALBUM_ARTIST_ROLE.main && hasContributor)

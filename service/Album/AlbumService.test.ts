@@ -32,7 +32,7 @@ describe("AlbumService.findOrCreate", () => {
       mockRepository.insert.mockResolvedValue({ id: "new-album-id", title: "AlbumA" });
 
       const request = createRequest("AlbumA", [
-        { id: "artist-1", name: "Artist1", role: "main" },
+        { id: "artist-1", name: "Artist1", role: TRACK_ARTIST_ROLE.main },
       ]);
       const result = await service.findOrCreate(request);
 
@@ -48,8 +48,8 @@ describe("AlbumService.findOrCreate", () => {
       mockRepository.insert.mockResolvedValue({ id: "new-album-id", title: "AlbumA" });
 
       const request = createRequest("AlbumA", [
-        { id: "artist-1", name: "Artist1", role: "main" },
-        { id: "artist-2", name: "Artist2", role: "feature" },
+        { id: "artist-1", name: "Artist1", role: TRACK_ARTIST_ROLE.main },
+        { id: "artist-2", name: "Artist2", role: TRACK_ARTIST_ROLE.feature },
       ]);
       const result = await service.findOrCreate(request);
 
@@ -88,7 +88,7 @@ describe("AlbumService.findOrCreate", () => {
       mockRepository.findManyByTitleAndArtistIds.mockResolvedValue([existing]);
 
       const request = createRequest("AlbumA", [
-        { id: "artist-1", name: "Artist1", role: "main" },
+        { id: "artist-1", name: "Artist1", role: TRACK_ARTIST_ROLE.main },
       ]);
       const result = await service.findOrCreate(request);
 
@@ -106,7 +106,7 @@ describe("AlbumService.findOrCreate", () => {
       mockRepository.findManyByTitleAndArtistIds.mockResolvedValue([existing]);
 
       const request = createRequest("AlbumA", [
-        { id: "artist-2", name: "Artist2", role: "main" },
+        { id: "artist-2", name: "Artist2", role: TRACK_ARTIST_ROLE.main },
       ]);
       const result = await service.findOrCreate(request);
 
@@ -124,8 +124,8 @@ describe("AlbumService.findOrCreate", () => {
       mockRepository.findManyByTitleAndArtistIds.mockResolvedValue([existing]);
 
       const request = createRequest("AlbumA", [
-        { id: "artist-1", name: "Artist1", role: "main" },
-        { id: "artist-2", name: "Artist2", role: "feature" },
+        { id: "artist-1", name: "Artist1", role: TRACK_ARTIST_ROLE.main },
+        { id: "artist-2", name: "Artist2", role: TRACK_ARTIST_ROLE.feature },
       ]);
       const result = await service.findOrCreate(request);
 
@@ -147,9 +147,9 @@ describe("AlbumService.findOrCreate", () => {
       mockRepository.findManyByTitleAndArtistIds.mockResolvedValue([existing]);
 
       const request = createRequest("AlbumA", [
-        { id: "artist-1", name: "Artist1", role: "main" },
-        { id: "artist-2", name: "Artist2", role: "feature" },
-        { id: "artist-3", name: "Artist3", role: "with" },
+        { id: "artist-1", name: "Artist1", role: TRACK_ARTIST_ROLE.main },
+        { id: "artist-2", name: "Artist2", role: TRACK_ARTIST_ROLE.feature },
+        { id: "artist-3", name: "Artist3", role: TRACK_ARTIST_ROLE.with },
       ]);
       const result = await service.findOrCreate(request);
 
@@ -236,7 +236,7 @@ describe("AlbumService.findOrCreate", () => {
       mockRepository.findManyByTitleAndArtistIds.mockResolvedValue([existing]);
 
       const request = createRequest("AlbumA", [
-        { id: "artist-1", name: "Artist1", role: "main" },
+        { id: "artist-1", name: "Artist1", role: TRACK_ARTIST_ROLE.main },
       ]);
       const result = await service.findOrCreate(request);
 
@@ -253,7 +253,7 @@ describe("AlbumService.findOrCreate", () => {
       mockRepository.findManyByTitleAndArtistIds.mockResolvedValue([existing]);
 
       const request = createRequest("AlbumA", [
-        { id: "artist-2", name: "Artist2", role: "main" },
+        { id: "artist-2", name: "Artist2", role: TRACK_ARTIST_ROLE.main },
       ]);
       const result = await service.findOrCreate(request);
 
@@ -295,7 +295,7 @@ describe("AlbumService.findOrCreate", () => {
       mockRepository.findByExternalId.mockResolvedValue(existing);
 
       const request = createRequest("AlbumA", [
-        { id: "artist-1", name: "Artist1", role: "main" },
+        { id: "artist-1", name: "Artist1", role: TRACK_ARTIST_ROLE.main },
       ], "ext-album-1");
       const result = await service.findOrCreate(request);
 
@@ -309,7 +309,7 @@ describe("AlbumService.findOrCreate", () => {
       mockRepository.insert.mockResolvedValue({ id: "new-album-id", title: "AlbumA" });
 
       const request = createRequest("AlbumA", [
-        { id: "artist-1", name: "Artist1", role: "main" },
+        { id: "artist-1", name: "Artist1", role: TRACK_ARTIST_ROLE.main },
       ], "ext-album-1");
       const result = await service.findOrCreate(request);
 
@@ -323,7 +323,7 @@ describe("AlbumService.findOrCreate", () => {
       mockRepository.insert.mockResolvedValue({ id: "new-album-id", title: "AlbumA" });
 
       const request = createRequest("AlbumA", [
-        { id: "artist-1", name: "Artist1", role: "main" },
+        { id: "artist-1", name: "Artist1", role: TRACK_ARTIST_ROLE.main },
       ]);
       const result = await service.findOrCreate(request);
 
@@ -334,7 +334,7 @@ describe("AlbumService.findOrCreate", () => {
   });
 
   describe("첫번째 아티스트의 role이 유효하지 않으면 에러를 던진다", () => {
-    it.each(["feature", "with"] as const)(
+    it.each([TRACK_ARTIST_ROLE.feature, TRACK_ARTIST_ROLE.with] as const)(
       "첫 번째 아티스트의 role이 %s이면 에러를 던진다",
       async (role) => {
         const request = createRequest("AlbumA", [
