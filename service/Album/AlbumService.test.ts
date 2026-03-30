@@ -98,6 +98,25 @@ describe("AlbumService.findOrCreate", () => {
       expect(mockRepository.updateArtistRoles).not.toHaveBeenCalled();
     });
 
+    it("기존과 동일한 role 조합이 들어오면 변경 없이 기존 앨범을 반환한다", async () => {
+      const existing = createExistingAlbum("existing-id", "AlbumA", [
+        { artistId: "artist-1", role: "main" },
+        { artistId: "artist-2", role: "contributor" },
+      ]);
+      mockRepository.findManyByTitleAndArtistIds.mockResolvedValue([existing]);
+
+      const request = createRequest("AlbumA", [
+        { id: "artist-1", name: "Artist1", role: TRACK_ARTIST_ROLE.main },
+        { id: "artist-2", name: "Artist2", role: TRACK_ARTIST_ROLE.feature },
+      ]);
+      const result = await service.findOrCreate(request);
+
+      expect(result).toBe(existing);
+      expect(mockRepository.insert).not.toHaveBeenCalled();
+      expect(mockRepository.insertArtists).not.toHaveBeenCalled();
+      expect(mockRepository.updateArtistRoles).not.toHaveBeenCalled();
+    });
+
     it("기존 앨범에 존재하는 아티스트와 일치하면 추가하지 않는다", async () => {
       const existing = createExistingAlbum("existing-id", "AlbumA", [
         { artistId: "artist-1", role: "various" },

@@ -48,6 +48,8 @@ class AlbumService {
    * 강등 조건:
    * - incoming이 "various"인데 기존에 "various"가 아닌 아티스트가 있는 경우
    * - 기존에 "contributor"가 있는데 incoming이 "main"인 경우 (동일 앨범에 단독 곡이 추가된 것이므로 VA 앨범)
+   *
+   * 모든 incoming 아티스트의 role이 기존과 동일하면 변경 없이 조기 반환한다.
    */
   async #syncArtists(
     existing: ExistingAlbum,
@@ -55,12 +57,22 @@ class AlbumService {
     incomingRole: AlbumArtistRole,
   ) {
     const existingMap = new Map(existing.albumArtists.map((a) => [a.artistId, a.role]));
+    const toInsert = artists.filter((a) => !existingMap.has(a.id));
+
+    const hasRoleConflict = artists.some((a) => {
+      const existingRole = existingMap.get(a.id);
+      return existingRole !== undefined && existingRole !== getAlbumArtistRole(a.role);
+    });
+
+    if (toInsert.length === 0 && !hasRoleConflict) {
+      return;
+    }
     const demoteIds = existing.albumArtists
       .filter((a) => a.role !== ALBUM_ARTIST_ROLE.various)
       .map((a) => a.artistId);
 
     const hasContributor = existing.albumArtists.some((a) => a.role === ALBUM_ARTIST_ROLE.contributor);
-    const needsDemotion = demoteIds.length > 0 && (
+    const needsDemotion = hasRoleConflict && demoteIds.length > 0 && (
       incomingRole === ALBUM_ARTIST_ROLE.various ||
       (incomingRole === ALBUM_ARTIST_ROLE.main && hasContributor)
     );
@@ -68,8 +80,6 @@ class AlbumService {
     if (needsDemotion) {
       await this.#repository.updateArtistRoles(existing.id, demoteIds, ALBUM_ARTIST_ROLE.various);
     }
-    const toInsert = artists.filter((a) => !existingMap.has(a.id));
-
     if (toInsert.length === 0) {
       return;
     }

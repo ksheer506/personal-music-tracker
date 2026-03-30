@@ -36,13 +36,13 @@ trackB - albumA - artist1(various), artist2(various) // 신규 추가
 1. role 조건 없이 title + artistId로 조회
 
 2. 조회된 앨범이 존재:
-  - album_title, artist, role이 모두 동일한 경우 해당 결과 반환 
-  
-  - albumA - artist1(main) 존재, albumA - artist1(various) 추가          -> albumA - artist1(various) 변경
-
-  - albumA - artist1(various) 존재, albumA - artist1(main) 추가          -> albumA - artist1(various) 유지
-
-  - albumA - artist1(contributor) 존재, albumA - artist1(main) 추가      -> albumA - artist1(various) 변경
-  - albumA - artist1(contributor) 존재, albumA - artist1(various) 추가   -> albumA - artist1(various) 변경
+  - 모든 incoming 아티스트에 대해 기존 album_title, artist, role이 모두 동일한 경우 변경 없이 해당 결과 반환
+  - 아티스트별 role 비교(기존 → incoming):
+    - albumA - artist1(main) 존재, albumA - artist1(various) 추가          -> albumA - artist1(various) 변경
+    - albumA - artist1(various) 존재, albumA - artist1(main) 추가          -> albumA - artist1(various) 유지
+    - albumA - artist1(contributor) 존재, albumA - artist1(main) 추가      -> albumA - artist1(various) 변경
+    - albumA - artist1(contributor) 존재, albumA - artist1(various) 추가   -> albumA - artist1(various) 변경
+    - albumA - artist1(main) 존재, albumA - artist1(main) 추가             -> 변경 없음
+    - albumA - artist1(contributor) 존재, albumA - artist1(contributor) 추가 -> 변경 없음
 
 3. 조회된 앨범이 존재하지 않음: 특별한 변환 과정 없이 추가
