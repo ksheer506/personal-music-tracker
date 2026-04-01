@@ -41,7 +41,9 @@ class ArtistRepository {
   }
 
   async insertMany(values: ArtistInsert[]) {
-    if (values.length === 0) return [];
+    if (values.length === 0) {
+      return [];
+    }
     return this.#tx
       .insert(artists)
       .values(values)

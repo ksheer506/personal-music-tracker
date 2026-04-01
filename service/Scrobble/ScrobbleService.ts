@@ -19,7 +19,7 @@ class ScrobbleService {
 
     return db.transaction(async (tx) => {
       const artists = await new ArtistService(tx).resolveMany(
-        parsedArtists.map((a) => ({ ...a, externalId: artistExternalIds[a.name] ?? null }))
+        parsedArtists.map((a) => ({ ...a, externalId: artistExternalIds[a.name] || null }))
       );
       const artistsWithRole = artists.map((a, i) => ({ ...a, role: parsedArtists[i].role }))
       const album = await new AlbumService(tx).findOrCreate({
