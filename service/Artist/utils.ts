@@ -1,5 +1,5 @@
 import { Artist } from "@db/types";
-import { ArtistResolveRequest } from "@service/Artist/types";
+import { ArtistExternalId, ArtistResolveRequest } from "@service/Artist/types";
 /**
  * 이미 DB에 기록된 Artist에 대해 Spotify API에 해당 Artist가 추가된 경우, 
  * `externalId`가 `null`(이전 request) -> `string`(현재 request)으로 달라질 수 있기 때문에 
@@ -19,6 +19,12 @@ export const getLatestExternalId = (
   req: ArtistResolveRequest[],
   artist: Artist
 ) => req.find((r) => r.name === artist.name)?.externalId ?? null;
+
+export const parseArtistExternalIds = (externalIds: ArtistExternalId[]) => {
+  return externalIds.reduce((a, c) => {
+    return { ...a, [c.name]: c.id };
+  }, {} as Record<string, string>);
+}
 
 export const getArtistSortName = (artist: string) => artist
   .trim()

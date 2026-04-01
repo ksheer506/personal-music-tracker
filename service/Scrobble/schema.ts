@@ -7,4 +7,12 @@ export const ScrobbleSchema = z.object({
   album: z.string().min(1),
   durationSec: z.number(),
   playedAt: z.string().datetime(),
+  externalIds: z.object({
+    artist: z.array(z.object({
+      id: z.string(),
+      name: z.string(),
+    })).optional(),
+    album: z.string().optional(),
+    track: z.string().optional(),
+  }).optional(),
 });

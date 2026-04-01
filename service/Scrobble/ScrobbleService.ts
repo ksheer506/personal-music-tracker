@@ -7,21 +7,24 @@ import { ScrobbleRequest } from "@service/Scrobble/types";
 import SpotifyService from "@service/Spotify/SpotifyService";
 import TrackService from "@service/Track/TrackService";
 import dayjs from "dayjs";
+import { parseArtistExternalIds } from "@service/Artist/utils";
 
 class ScrobbleService {
   async create(request: ScrobbleRequest) {
-    const { title, artist } = request;
+    const { title, artist, externalIds } = request;
     const parsedArtists = parseArtists(title, artist);
-    const externalIds = await new SpotifyService().matchArtist(title, parsedArtists);
+    /** TODO:ksh: parsedArtists가 둘 이상일 경우 externalId 맵핑 필요 - 2026.04.01 */
+    const artistExternalIds = parseArtistExternalIds(externalIds?.artist ?? []);
+    /* const externalIds: string[] = await new SpotifyService().matchArtist(title, parsedArtists); */
 
     return db.transaction(async (tx) => {
       const artists = await new ArtistService(tx).resolveMany(
-        parsedArtists.map((artist, i) => ({ ...artist, externalId: externalIds[i] }))
+        parsedArtists.map((a) => ({ ...a, externalId: artistExternalIds[a.name] ?? null }))
       );
       const artistsWithRole = artists.map((a, i) => ({ ...a, role: parsedArtists[i].role }))
       const album = await new AlbumService(tx).findOrCreate({
         title: request.album,
-        /** TODO:ksh: multiple artist인 경우? - 2026.03.20 */
+        externalId: externalIds?.album,
         artists: artistsWithRole,
       });
       const track = await new TrackService(tx).findOrCreate({

@@ -35,7 +35,6 @@ export default tseslint.config(
       "@stylistic/space-infix-ops": "error",
       "@stylistic/block-spacing": "error",
       "@stylistic/arrow-spacing": "error",
-      "@stylistic/object-curly-spacing": ["error", "always"],
       "@stylistic/keyword-spacing": ["error", { after: true, before: true }],
       "@stylistic/semi-spacing": ["error", { "before": false, "after": true }],
       /** Indent */
@@ -67,6 +66,10 @@ export default tseslint.config(
       "@stylistic/jsx-max-props-per-line": ["error", { maximum: 1, when: "multiline" }],
       "@stylistic/jsx-first-prop-new-line": ["error"],
       "@stylistic/jsx-props-no-multi-spaces": "error",
+      /** Curly braces */
+      "curly": ["error", "all"],
+      "@stylistic/object-curly-spacing": ["error", "always"],
+      "@stylistic/curly-newline": ["error", "always"],
       /** Etc. */
       "@stylistic/quotes": ["error", "double"],
       "@stylistic/no-extra-semi": "error",
