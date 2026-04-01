@@ -50,6 +50,13 @@
       "when": 1774510138496,
       "tag": "0006_add-album-external-id",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1775007719392,
+      "tag": "0007_add-track-raw-artist",
+      "breakpoints": true
     }
   ]
 }

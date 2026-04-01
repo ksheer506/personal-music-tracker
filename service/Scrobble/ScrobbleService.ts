@@ -26,6 +26,7 @@ class ScrobbleService {
       });
       const track = await new TrackService(tx).findOrCreate({
         title,
+        rawArtist: artist,
         albumId: album.id,
         durationSec: request.durationSec,
         artists: artistsWithRole,

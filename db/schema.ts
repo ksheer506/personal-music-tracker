@@ -71,6 +71,8 @@ export const albumArtists = pgTable(
 export const tracks = pgTable("tracks", {
   id: uuid("id").defaultRandom().primaryKey(),
   title: text("title").notNull(),
+  /** 스크로블 원본 아티스트 문자열. 정규화된 trackArtists와 별도로 원본 표기를 보존 */
+  rawArtist: text("raw_artist").notNull(),
   albumId: uuid("album_id").notNull().references(() => albums.id, { onDelete: "restrict" }),
   durationSec: integer("duration_sec"),
   createdAt: timestamp("created_at", { withTimezone: true })
